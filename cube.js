@@ -1,5 +1,1 @@
-const toObservation = require('./lib/cube/toObservation')
-
-module.exports = {
-  toObservation
-}
+export { default as toObservation } from './lib/cube/toObservation.js'

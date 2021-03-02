@@ -1,1 +1,1 @@
-require('./cube/toObservation.test')
+import './cube/toObservation.test.js'
