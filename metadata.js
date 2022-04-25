@@ -1,3 +1,4 @@
 import append from './lib/append.js'
+import graphStats from './lib/graphStats.js'
 
-export { append }
+export { append, graphStats }
