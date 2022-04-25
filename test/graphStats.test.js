@@ -15,7 +15,7 @@ describe('metadata.graphStats', () => {
     strictEqual(typeof graphStats, 'function')
   })
 
-  it('should return a duplex stream with fefault values', async () => {
+  it('should return a duplex stream with default values', async () => {
     const step = await graphStats()
     strictEqual(isDuplex(step), true)
   })
