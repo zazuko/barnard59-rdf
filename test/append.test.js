@@ -133,12 +133,12 @@ describe('metadata.append', () => {
     const result = await getStream.array(Readable.from(data).pipe(step))
 
     strictEqual(result.length, 3)
-    strictEqual(result[0].equals(data[0]), true)
-    strictEqual(result[1].equals(metadata[0]), false)
-    strictEqual(result[2].equals(metadata[1]), false)
+    strictEqual(result[0].equals(metadata[0]), false)
+    strictEqual(result[1].equals(metadata[1]), false)
+    strictEqual(result[2].equals(data[0]), true)
 
+    strictEqual(result[0].graph.value, graph.value)
     strictEqual(result[1].graph.value, graph.value)
-    strictEqual(result[2].graph.value, graph.value)
   })
 
   it('fails at unknown protocol', async () => {
@@ -176,14 +176,14 @@ describe('File System: metadata.append', () => {
     const result = await getStream.array(Readable.from(data).pipe(step))
     strictEqual(result.length, 7)
 
-    strictEqual(result[4].predicate.value, schema.dateModified.value)
-    strictEqual(result[4].object.value, rdf.literal('2020-05-30').value)
+    strictEqual(result[3].predicate.value, schema.dateModified.value)
+    strictEqual(result[3].object.value, rdf.literal('2020-05-30').value)
 
-    strictEqual(result[5].predicate.value, dcterms.created.value)
+    strictEqual(result[4].predicate.value, dcterms.created.value)
+    strictEqual(result[4].object.value, rdf.literal((new Date(stats.birthtimeMs)).toISOString(), xsd.dateTime).value)
+
+    strictEqual(result[5].predicate.value, schema.dateCreated.value)
     strictEqual(result[5].object.value, rdf.literal((new Date(stats.birthtimeMs)).toISOString(), xsd.dateTime).value)
-
-    strictEqual(result[6].predicate.value, schema.dateCreated.value)
-    strictEqual(result[6].object.value, rdf.literal((new Date(stats.birthtimeMs)).toISOString(), xsd.dateTime).value)
   })
 
   it('should use resolved literal TIME_FILE_CREATION with dateModified', async () => {
@@ -202,14 +202,14 @@ describe('File System: metadata.append', () => {
 
     strictEqual(result.length, 7)
 
-    strictEqual(result[4].predicate.value, schema.dateCreated.value)
-    strictEqual(result[4].object.value, rdf.literal('2020-05-30').value)
+    strictEqual(result[3].predicate.value, schema.dateCreated.value)
+    strictEqual(result[3].object.value, rdf.literal('2020-05-30').value)
 
-    strictEqual(result[5].predicate.value, dcterms.modified.value)
+    strictEqual(result[4].predicate.value, dcterms.modified.value)
+    strictEqual(result[4].object.value, rdf.literal((new Date(stats.birthtimeMs)).toISOString(), xsd.dateTime).value)
+
+    strictEqual(result[5].predicate.value, schema.dateModified.value)
     strictEqual(result[5].object.value, rdf.literal((new Date(stats.birthtimeMs)).toISOString(), xsd.dateTime).value)
-
-    strictEqual(result[6].predicate.value, schema.dateModified.value)
-    strictEqual(result[6].object.value, rdf.literal((new Date(stats.birthtimeMs)).toISOString(), xsd.dateTime).value)
   })
 
   it('should use resolved literal TIME_FILE_MODIFICATION with dateCreated', async () => {
@@ -227,14 +227,14 @@ describe('File System: metadata.append', () => {
     const result = await getStream.array(Readable.from(data).pipe(step))
     strictEqual(result.length, 7)
 
-    strictEqual(result[4].predicate.value, schema.dateModified.value)
-    strictEqual(result[4].object.value, rdf.literal('2020-05-30').value)
+    strictEqual(result[3].predicate.value, schema.dateModified.value)
+    strictEqual(result[3].object.value, rdf.literal('2020-05-30').value)
 
-    strictEqual(result[5].predicate.value, dcterms.created.value)
+    strictEqual(result[4].predicate.value, dcterms.created.value)
+    strictEqual(result[4].object.value, rdf.literal((new Date(stats.mtimeMs)).toISOString(), xsd.dateTime).value)
+
+    strictEqual(result[5].predicate.value, schema.dateCreated.value)
     strictEqual(result[5].object.value, rdf.literal((new Date(stats.mtimeMs)).toISOString(), xsd.dateTime).value)
-
-    strictEqual(result[6].predicate.value, schema.dateCreated.value)
-    strictEqual(result[6].object.value, rdf.literal((new Date(stats.mtimeMs)).toISOString(), xsd.dateTime).value)
   })
 
   it('should use resolved literal TIME_FILE_MODIFICATION with dateModified', async () => {
@@ -253,14 +253,14 @@ describe('File System: metadata.append', () => {
 
     strictEqual(result.length, 7)
 
-    strictEqual(result[4].predicate.value, schema.dateCreated.value)
-    strictEqual(result[4].object.value, rdf.literal('2020-05-30').value)
+    strictEqual(result[3].predicate.value, schema.dateCreated.value)
+    strictEqual(result[3].object.value, rdf.literal('2020-05-30').value)
 
-    strictEqual(result[5].predicate.value, dcterms.modified.value)
+    strictEqual(result[4].predicate.value, dcterms.modified.value)
+    strictEqual(result[4].object.value, rdf.literal((new Date(stats.mtimeMs)).toISOString(), xsd.dateTime).value)
+
+    strictEqual(result[5].predicate.value, schema.dateModified.value)
     strictEqual(result[5].object.value, rdf.literal((new Date(stats.mtimeMs)).toISOString(), xsd.dateTime).value)
-
-    strictEqual(result[6].predicate.value, schema.dateModified.value)
-    strictEqual(result[6].object.value, rdf.literal((new Date(stats.mtimeMs)).toISOString(), xsd.dateTime).value)
   })
 
   it('should use resolved literal TIME_NOW with dateModified', async () => {
@@ -281,11 +281,11 @@ describe('File System: metadata.append', () => {
 
     strictEqual(result.length, 4)
 
-    strictEqual(result[2].predicate.value, schema.dateCreated.value)
-    strictEqual(result[2].object.value, rdf.literal('2020-05-30').value)
+    strictEqual(result[1].predicate.value, schema.dateCreated.value)
+    strictEqual(result[1].object.value, rdf.literal('2020-05-30').value)
 
-    strictEqual(result[3].predicate.value, schema.dateModified.value)
-    strictEqual(result[3].object.value === rdf.literal('2020-05-30').value, false)
+    strictEqual(result[2].predicate.value, schema.dateModified.value)
+    strictEqual(result[2].object.value === rdf.literal('2020-05-30').value, false)
   })
 
   it('should use resolved literal TIME_NOW with dateCreated', async () => {
@@ -306,11 +306,11 @@ describe('File System: metadata.append', () => {
 
     strictEqual(result.length, 4)
 
-    strictEqual(result[2].predicate.value, schema.dateModified.value)
-    strictEqual(result[2].object.value, rdf.literal('2020-05-30').value)
+    strictEqual(result[1].predicate.value, schema.dateModified.value)
+    strictEqual(result[1].object.value, rdf.literal('2020-05-30').value)
 
-    strictEqual(result[3].predicate.value, schema.dateCreated.value)
-    strictEqual(result[3].object.value === rdf.literal('2020-05-30').value, false)
+    strictEqual(result[2].predicate.value, schema.dateCreated.value)
+    strictEqual(result[2].object.value === rdf.literal('2020-05-30').value, false)
   })
 
   it('should use specified literal with dateModified (string)', async () => {
@@ -330,8 +330,8 @@ describe('File System: metadata.append', () => {
 
     strictEqual(result.length, 3)
 
-    strictEqual(result[2].predicate.value, schema.dateModified.value)
-    strictEqual(result[2].object.value, rdf.literal('1999-12-31').value)
+    strictEqual(result[1].predicate.value, schema.dateModified.value)
+    strictEqual(result[1].object.value, rdf.literal('1999-12-31').value)
   })
 
   it('should use specified literal with dateCreated (string)', async () => {
@@ -351,8 +351,8 @@ describe('File System: metadata.append', () => {
 
     strictEqual(result.length, 3)
 
-    strictEqual(result[2].predicate.value, schema.dateCreated.value)
-    strictEqual(result[2].object.value, rdf.literal('1999-12-31').value)
+    strictEqual(result[1].predicate.value, schema.dateCreated.value)
+    strictEqual(result[1].object.value, rdf.literal('1999-12-31').value)
   })
 
   it('should use specified literal with dateModified', async () => {
@@ -372,8 +372,8 @@ describe('File System: metadata.append', () => {
 
     strictEqual(result.length, 3)
 
-    strictEqual(result[2].predicate.value, schema.dateModified.value)
-    strictEqual(result[2].object.value, rdf.literal('1999-12-31').value)
+    strictEqual(result[1].predicate.value, schema.dateModified.value)
+    strictEqual(result[1].object.value, rdf.literal('1999-12-31').value)
   })
 
   it('should use specified literal with dateCreated', async () => {
@@ -393,7 +393,7 @@ describe('File System: metadata.append', () => {
 
     strictEqual(result.length, 3)
 
-    strictEqual(result[2].predicate.value, schema.dateCreated.value)
-    strictEqual(result[2].object.value, rdf.literal('1999-12-31').value)
+    strictEqual(result[1].predicate.value, schema.dateCreated.value)
+    strictEqual(result[1].object.value, rdf.literal('1999-12-31').value)
   })
 })
