@@ -264,7 +264,6 @@ describe('cube.buildCubeShape', () => {
     input.pipe(transform)
 
     const result = await datasetStreamToClownface(transform)
-
     checkMinMax(result, min, max)
   })
 
