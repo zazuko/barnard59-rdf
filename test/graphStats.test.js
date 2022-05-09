@@ -7,6 +7,7 @@ import rdf from 'rdf-ext'
 import { Readable } from 'readable-stream'
 import graphStats from '../lib/graphStats.js'
 import * as ns from '../lib/namespaces.js'
+import { xsd } from '../lib/namespaces.js'
 
 const ex = namespace('http://example.org/')
 
@@ -54,8 +55,8 @@ describe('metadata.graphStats', () => {
     ]
 
     const metadata = [
-      rdf.quad(ex.dataset1, ns._void.triples, rdf.literal(3), ex.graph0),
-      rdf.quad(ex.dataset1, ns._void.entities, rdf.literal(2), ex.graph0)
+      rdf.quad(ex.dataset1, ns._void.triples, rdf.literal(3, xsd.integer), ex.graph0),
+      rdf.quad(ex.dataset1, ns._void.entities, rdf.literal(2, xsd.integer), ex.graph0)
     ]
 
     const step = await graphStats({})
@@ -86,8 +87,8 @@ describe('metadata.graphStats', () => {
       rdf.quad(namedGraph, ns.sd.name, rdf.namedNode('http://test'), ex.graph0),
       rdf.quad(namedGraph, ns.sd.graph, counts, ex.graph0),
       rdf.quad(counts, ns.rdf.type, ns.sd.Graph, ex.graph0),
-      rdf.quad(counts, ns._void.triples, rdf.literal(3), ex.graph0),
-      rdf.quad(counts, ns._void.entities, rdf.literal(2), ex.graph0)
+      rdf.quad(counts, ns._void.triples, rdf.literal(3, xsd.integer), ex.graph0),
+      rdf.quad(counts, ns._void.entities, rdf.literal(2, xsd.integer), ex.graph0)
     ]
 
     const step = await graphStats({
