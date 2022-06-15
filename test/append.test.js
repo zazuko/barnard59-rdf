@@ -61,7 +61,8 @@ describe('metadata.append', () => {
 
   it('should return a duplex stream with a path (string) metadata parameter', async () => {
     const step = await append({
-      input: metadataPath
+      input: metadataPath,
+      basePath: __dirname
     })
     strictEqual(isDuplex(step), true)
   })
@@ -102,7 +103,7 @@ describe('metadata.append', () => {
 
     const step = await append({
       input: metadataPath,
-      basepath: __dirname
+      basePath: __dirname
     })
     const { final } = await applyStep(step)
 
@@ -141,15 +142,6 @@ describe('metadata.append', () => {
     strictEqual(result[2].graph.value, graph.value)
   })
 
-  it('fails at unknown protocol', async () => {
-    await assertThrows(async () => {
-      const step = await append({
-        input: 'unknown::protocol'
-      })
-      await applyStep(step)
-    }, Error, /unknown protocol/)
-  })
-
   it('fails at file not found', async () => {
     await assertThrows(async () => {
       const step = await append({
@@ -168,7 +160,7 @@ describe('File System: metadata.append', () => {
 
     const step = await append({
       input: metadataPath,
-      basepath: __dirname,
+      basePath: __dirname,
       dateCreated: 'TIME_FILE_CREATION'
     })
 
@@ -193,7 +185,7 @@ describe('File System: metadata.append', () => {
 
     const step = await append({
       input: metadataPath,
-      basepath: __dirname,
+      basePath: __dirname,
       dateModified: 'TIME_FILE_CREATION'
     })
 
@@ -219,7 +211,7 @@ describe('File System: metadata.append', () => {
 
     const step = await append({
       input: metadataPath,
-      basepath: __dirname,
+      basePath: __dirname,
       dateCreated: 'TIME_FILE_MODIFICATION'
     })
 
@@ -244,7 +236,7 @@ describe('File System: metadata.append', () => {
 
     const step = await append({
       input: metadataPath,
-      basepath: __dirname,
+      basePath: __dirname,
       dateModified: 'TIME_FILE_MODIFICATION'
     })
 
