@@ -1,6 +1,7 @@
 import { equal, strictEqual } from 'assert'
 import namespace from '@rdfjs/namespace'
 import assertThrows from 'assert-throws-async'
+import cf from 'clownface'
 import getStream from 'get-stream'
 import { isDuplex } from 'isstream'
 import { describe, it } from 'mocha'
@@ -296,6 +297,40 @@ describe('metadata.voidStats', () => {
       voidDatasetUri: ex.dataset.value,
       propertyPartitions: [ex.p_1.value, ex.p_3.value],
       graph: ex.graph.value,
+      includeTotals: true
+    })
+
+    const result = await getStream.array(inputStream.pipe(sut))
+
+    strictEqual(result.length, 17)
+
+    for (const quad of result.slice(8)) {
+      strictEqual(quad.graph.equals(ex.graph), true)
+    }
+  })
+
+  it('accepts clownfaces as parameters', async () => {
+    const data = [
+      rdf.quad(ex.a_1, ns.rdf.type, ex.A),
+      rdf.quad(ex.a_2, ns.rdf.type, ex.A),
+      rdf.quad(ex.b_1, ns.rdf.type, ex.B),
+      rdf.quad(ex.c_1, ns.rdf.type, ex.C),
+      rdf.quad(ex.a, ex.p_1, ex.b),
+      rdf.quad(ex.a, ex.p_1, ex.b),
+      rdf.quad(ex.a, ex.p_2, ex.b),
+      rdf.quad(ex.a, ex.p_3, ex.b)
+    ]
+    const inputStream = Readable.from(data)
+
+    const dataset = rdf.dataset().addAll(data)
+    function toCF (term) {
+      return cf({ dataset: dataset, term: term })
+    }
+
+    const sut = voidStats({
+      voidDatasetUri: toCF(ex.dataset),
+      propertyPartitions: [toCF(ex.p_1), toCF(ex.p_3)],
+      graph: toCF(ex.graph),
       includeTotals: true
     })
 
