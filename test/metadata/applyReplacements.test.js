@@ -3,7 +3,7 @@ import namespace from '@rdfjs/namespace'
 import { describe, it } from 'mocha'
 import rdf from 'rdf-ext'
 import { Readable } from 'readable-stream'
-import { applyOptions } from '../../lib/metadata/applyOptions.js'
+import { applyReplacements } from '../../lib/metadata/applyReplacements.js'
 import * as ns from '../../lib/namespaces.js'
 import { xsd } from '../../lib/namespaces.js'
 
@@ -11,7 +11,7 @@ const ex = namespace('http://example.org/')
 
 describe('applyOptions', () => {
   it('should be a function', () => {
-    strictEqual(typeof applyOptions, 'function')
+    strictEqual(typeof applyReplacements, 'function')
   })
 
   it('should return the same data if no options given', async () => {
@@ -21,7 +21,7 @@ describe('applyOptions', () => {
 
     const options = {}
     const quadStream = Readable.from(data, options)
-    const result = [...await applyOptions(quadStream)]
+    const result = [...await applyReplacements(quadStream)]
 
     strictEqual(result.length, 1)
     strictEqual(result[0].equals(data[0]), true)
@@ -39,7 +39,7 @@ describe('applyOptions', () => {
       dateCreated: rdf.literal('1999-12-31', xsd.dateTime)
     }
     const quadStream = Readable.from(data)
-    const result = [...await applyOptions(quadStream, {}, options)]
+    const result = [...await applyReplacements(quadStream, {}, options)]
 
     strictEqual(result.length, 5)
     strictEqual(result[0].equals(data[0]), true)
@@ -58,7 +58,7 @@ describe('applyOptions', () => {
       dateCreated: rdf.literal('1999-12-31', xsd.dateTime).toString()
     }
     const quadStream = Readable.from(data)
-    const result = [...await applyOptions(quadStream, {}, options)]
+    const result = [...await applyReplacements(quadStream, {}, options)]
 
     strictEqual(result.length, 2)
     strictEqual(result[0].equals(data[0]), true)
@@ -77,7 +77,7 @@ describe('applyOptions', () => {
       dateCreated: rdf.literal('1999-12-31', xsd.dateTime)
     }
     const quadStream = Readable.from(data)
-    const result = [...await applyOptions(quadStream, {}, options)]
+    const result = [...await applyReplacements(quadStream, {}, options)]
 
     strictEqual(result.length, 5)
     strictEqual(result[0].equals(data[0]), true)
@@ -99,7 +99,7 @@ describe('applyOptions', () => {
       dateModified: rdf.literal('1999-12-31', xsd.dateTime)
     }
     const quadStream = Readable.from(data)
-    const result = [...await applyOptions(quadStream, {}, options)]
+    const result = [...await applyReplacements(quadStream, {}, options)]
 
     strictEqual(result.length, 5)
     strictEqual(result[0].equals(data[0]), true)
@@ -121,7 +121,7 @@ describe('applyOptions', () => {
       dateModified: rdf.literal('1999-12-31', xsd.dateTime)
     }
     const quadStream = Readable.from(data)
-    const result = [...await applyOptions(quadStream, {}, options)]
+    const result = [...await applyReplacements(quadStream, {}, options)]
 
     strictEqual(result.length, 5)
     strictEqual(result[0].equals(data[0]), true)
@@ -141,7 +141,7 @@ describe('applyOptions', () => {
       dateModified: rdf.literal('1999-12-31', xsd.dateTime)
     }
     const quadStream = Readable.from(data)
-    const result = [...await applyOptions(quadStream, {}, options)]
+    const result = [...await applyReplacements(quadStream, {}, options)]
 
     strictEqual(result.length, 4)
     strictEqual(result[0].equals(data[0]), true)
@@ -159,7 +159,7 @@ describe('applyOptions', () => {
       dateModified: rdf.literal('1999-12-31', xsd.dateTime).toString()
     }
     const quadStream = Readable.from(data)
-    const result = [...await applyOptions(quadStream, {}, options)]
+    const result = [...await applyReplacements(quadStream, {}, options)]
 
     strictEqual(result.length, 2)
     strictEqual(result[0].equals(data[0]), true)
@@ -179,7 +179,7 @@ describe('applyOptions', () => {
       dateModified: rdf.literal('1999-12-31', xsd.dateTime)
     }
     const quadStream = Readable.from(data)
-    const result = [...await applyOptions(quadStream, {}, options)]
+    const result = [...await applyReplacements(quadStream, {}, options)]
 
     strictEqual(result.length, 5)
     strictEqual(result[0].graph.equals(ex.graph2), true)
@@ -198,7 +198,7 @@ describe('applyOptions', () => {
       graph: ex.graph2.value
     }
     const quadStream = Readable.from(data)
-    const result = [...await applyOptions(quadStream, {}, options)]
+    const result = [...await applyReplacements(quadStream, {}, options)]
 
     strictEqual(result.length, 1)
     strictEqual(result[0].graph.equals(ex.graph2), true)
