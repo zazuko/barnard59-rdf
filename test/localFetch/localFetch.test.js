@@ -29,13 +29,13 @@ describe('metadata.lfetch', () => {
   it('should throw an error if no input is given', async () => {
     await assertThrows(async () => {
       await localFetch()
-    }, Error, /needs input filename or URL/)
+    }, Error, /needs input stream, filename or URL/)
   })
 
   it('should throw an error if no valid input is given', async () => {
     await assertThrows(async () => {
       await localFetch({ not: 'this' })
-    }, Error, /needs input filename or URL, got /)
+    }, Error, /needs input stream, filename or URL, got /)
   })
 
   it('with defaults, should get the same dataset', async () => {
@@ -78,7 +78,7 @@ describe('metadata.lfetch', () => {
   it('fails if not string', async () => {
     await assertThrows(async () => {
       await localFetch(['a', 'b'])
-    }, Error, /needs input filename or URL, got \[object\]/)
+    }, Error, /needs input stream, filename or URL, got \[object\]/)
   })
 
   it('should get a dataset from URL pointing to a public resource', async () => {
@@ -99,11 +99,5 @@ describe('metadata.lfetch', () => {
     await assertThrows(async () => {
       await localFetch(new URL('../support/file.unknown.extension', import.meta.url).toString())
     }, Error, /No parser could be guessed for/)
-  })
-
-  it('fails at unknown protocol', async () => {
-    await assertThrows(async () => {
-      await localFetch('unknown::protocol')
-    }, Error, /unknown protocol/)
   })
 })

@@ -2,7 +2,6 @@ import { strictEqual } from 'assert'
 import namespace from '@rdfjs/namespace'
 import { describe, it } from 'mocha'
 import rdf from 'rdf-ext'
-import { Readable } from 'readable-stream'
 import { applyReplacements } from '../../lib/metadata/applyReplacements.js'
 import * as ns from '../../lib/namespaces.js'
 import { xsd } from '../../lib/namespaces.js'
@@ -19,9 +18,8 @@ describe('applyOptions', () => {
       rdf.quad(ex.subject0, ns.rdf.type, ex.type0, ex.graph1)
     ]
 
-    const options = {}
-    const quadStream = Readable.from(data, options)
-    const result = [...await applyReplacements(quadStream)]
+    const dataset = rdf.dataset().addAll(data)
+    const result = [...await applyReplacements(dataset, {}, {})]
 
     strictEqual(result.length, 1)
     strictEqual(result[0].equals(data[0]), true)
@@ -38,8 +36,8 @@ describe('applyOptions', () => {
     const options = {
       dateCreated: rdf.literal('1999-12-31', xsd.dateTime)
     }
-    const quadStream = Readable.from(data)
-    const result = [...await applyReplacements(quadStream, {}, options)]
+    const dataset = rdf.dataset().addAll(data)
+    const result = [...await applyReplacements(dataset, {}, options)]
 
     strictEqual(result.length, 5)
     strictEqual(result[0].equals(data[0]), true)
@@ -57,8 +55,8 @@ describe('applyOptions', () => {
     const options = {
       dateCreated: rdf.literal('1999-12-31', xsd.dateTime).toString()
     }
-    const quadStream = Readable.from(data)
-    const result = [...await applyReplacements(quadStream, {}, options)]
+    const dataset = rdf.dataset().addAll(data)
+    const result = [...await applyReplacements(dataset, {}, options)]
 
     strictEqual(result.length, 2)
     strictEqual(result[0].equals(data[0]), true)
@@ -76,8 +74,8 @@ describe('applyOptions', () => {
     const options = {
       dateCreated: rdf.literal('1999-12-31', xsd.dateTime)
     }
-    const quadStream = Readable.from(data)
-    const result = [...await applyReplacements(quadStream, {}, options)]
+    const dataset = rdf.dataset().addAll(data)
+    const result = [...await applyReplacements(dataset, {}, options)]
 
     strictEqual(result.length, 5)
     strictEqual(result[0].equals(data[0]), true)
@@ -98,8 +96,8 @@ describe('applyOptions', () => {
     const options = {
       dateModified: rdf.literal('1999-12-31', xsd.dateTime)
     }
-    const quadStream = Readable.from(data)
-    const result = [...await applyReplacements(quadStream, {}, options)]
+    const dataset = rdf.dataset().addAll(data)
+    const result = [...await applyReplacements(dataset, {}, options)]
 
     strictEqual(result.length, 5)
     strictEqual(result[0].equals(data[0]), true)
@@ -120,8 +118,8 @@ describe('applyOptions', () => {
     const options = {
       dateModified: rdf.literal('1999-12-31', xsd.dateTime)
     }
-    const quadStream = Readable.from(data)
-    const result = [...await applyReplacements(quadStream, {}, options)]
+    const dataset = rdf.dataset().addAll(data)
+    const result = [...await applyReplacements(dataset, {}, options)]
 
     strictEqual(result.length, 5)
     strictEqual(result[0].equals(data[0]), true)
@@ -140,8 +138,8 @@ describe('applyOptions', () => {
     const options = {
       dateModified: rdf.literal('1999-12-31', xsd.dateTime)
     }
-    const quadStream = Readable.from(data)
-    const result = [...await applyReplacements(quadStream, {}, options)]
+    const dataset = rdf.dataset().addAll(data)
+    const result = [...await applyReplacements(dataset, {}, options)]
 
     strictEqual(result.length, 4)
     strictEqual(result[0].equals(data[0]), true)
@@ -158,8 +156,8 @@ describe('applyOptions', () => {
     const options = {
       dateModified: rdf.literal('1999-12-31', xsd.dateTime).toString()
     }
-    const quadStream = Readable.from(data)
-    const result = [...await applyReplacements(quadStream, {}, options)]
+    const dataset = rdf.dataset().addAll(data)
+    const result = [...await applyReplacements(dataset, {}, options)]
 
     strictEqual(result.length, 2)
     strictEqual(result[0].equals(data[0]), true)
@@ -178,8 +176,8 @@ describe('applyOptions', () => {
       graph: ex.graph2,
       dateModified: rdf.literal('1999-12-31', xsd.dateTime)
     }
-    const quadStream = Readable.from(data)
-    const result = [...await applyReplacements(quadStream, {}, options)]
+    const dataset = rdf.dataset().addAll(data)
+    const result = [...await applyReplacements(dataset, {}, options)]
 
     strictEqual(result.length, 5)
     strictEqual(result[0].graph.equals(ex.graph2), true)
@@ -197,8 +195,8 @@ describe('applyOptions', () => {
     const options = {
       graph: ex.graph2.value
     }
-    const quadStream = Readable.from(data)
-    const result = [...await applyReplacements(quadStream, {}, options)]
+    const dataset = rdf.dataset().addAll(data)
+    const result = [...await applyReplacements(dataset, {}, options)]
 
     strictEqual(result.length, 1)
     strictEqual(result[0].graph.equals(ex.graph2), true)

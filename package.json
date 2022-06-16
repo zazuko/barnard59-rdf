@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "coverage": "codecov",
-    "test": "stricter-standard && c8 --reporter=lcov --reporter=text mocha"
+    "test": "stricter-standard && c8 --reporter=lcov --reporter=text mocha './test/**/*.test.js'"
   },
   "repository": {
     "type": "git",
