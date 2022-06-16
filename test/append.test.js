@@ -70,9 +70,7 @@ describe('metadata.append', () => {
   it('should return a duplex stream with an URL pointing to a public resource', async () => {
     // Mocking a remote file.
     const fileStr = fs.readFileSync(new URL(metadataPath, import.meta.url), 'utf8')
-    nock('https://example.com')
-      .get('/metadata.ttl')
-      .reply(200, fileStr, { 'content-type': 'text/turtle' })
+    nock('https://example.com').get('/metadata.ttl').reply(200, fileStr, { 'content-type': 'text/turtle' })
 
     const stream = await append({
       input: 'https://example.com/metadata.ttl'
@@ -85,9 +83,11 @@ describe('metadata.append', () => {
     all.addAll(await getRDFDataset(dataPath))
     all.addAll(await getRDFDataset(metadataPath))
 
+    const metadataStream = getRDFStream(metadataPath)
     const step = await append({
-      input: getRDFStream(metadataPath)
+      input: metadataStream
     })
+
     const { final } = await applyStep(step)
 
     equal(
@@ -152,7 +152,7 @@ describe('metadata.append', () => {
   })
 })
 
-describe('File System: metadata.append', () => {
+describe('File system test, metadata.append', () => {
   it('should use resolved literal TIME_FILE_CREATION with dateCreated', async () => {
     const data = [
       rdf.quad(ex.subject0, ex.predicate0, ex.object0, ex.graph0)

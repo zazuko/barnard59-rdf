@@ -2,7 +2,7 @@ import { strictEqual } from 'assert'
 import namespace from '@rdfjs/namespace'
 import { describe, it } from 'mocha'
 import rdf from 'rdf-ext'
-import { applyReplacements } from '../../lib/metadata/applyReplacements.js'
+import { createMetadataReplacer } from '../../lib/metadata/metadataReplacer.js'
 import * as ns from '../../lib/namespaces.js'
 import { xsd } from '../../lib/namespaces.js'
 
@@ -10,7 +10,7 @@ const ex = namespace('http://example.org/')
 
 describe('applyOptions', () => {
   it('should be a function', () => {
-    strictEqual(typeof applyReplacements, 'function')
+    strictEqual(typeof createMetadataReplacer, 'function')
   })
 
   it('should return the same data if no options given', async () => {
@@ -19,7 +19,8 @@ describe('applyOptions', () => {
     ]
 
     const dataset = rdf.dataset().addAll(data)
-    const result = [...await applyReplacements(dataset, {}, {})]
+    const replacer = createMetadataReplacer({})
+    const result = [...await replacer(dataset, {})]
 
     strictEqual(result.length, 1)
     strictEqual(result[0].equals(data[0]), true)
@@ -37,7 +38,8 @@ describe('applyOptions', () => {
       dateCreated: rdf.literal('1999-12-31', xsd.dateTime)
     }
     const dataset = rdf.dataset().addAll(data)
-    const result = [...await applyReplacements(dataset, {}, options)]
+    const replacer = createMetadataReplacer(options)
+    const result = [...await replacer(dataset, {})]
 
     strictEqual(result.length, 5)
     strictEqual(result[0].equals(data[0]), true)
@@ -56,7 +58,8 @@ describe('applyOptions', () => {
       dateCreated: rdf.literal('1999-12-31', xsd.dateTime).toString()
     }
     const dataset = rdf.dataset().addAll(data)
-    const result = [...await applyReplacements(dataset, {}, options)]
+    const replacer = createMetadataReplacer(options)
+    const result = [...await replacer(dataset, {})]
 
     strictEqual(result.length, 2)
     strictEqual(result[0].equals(data[0]), true)
@@ -75,7 +78,8 @@ describe('applyOptions', () => {
       dateCreated: rdf.literal('1999-12-31', xsd.dateTime)
     }
     const dataset = rdf.dataset().addAll(data)
-    const result = [...await applyReplacements(dataset, {}, options)]
+    const replacer = createMetadataReplacer(options)
+    const result = [...await replacer(dataset, {})]
 
     strictEqual(result.length, 5)
     strictEqual(result[0].equals(data[0]), true)
@@ -97,7 +101,8 @@ describe('applyOptions', () => {
       dateModified: rdf.literal('1999-12-31', xsd.dateTime)
     }
     const dataset = rdf.dataset().addAll(data)
-    const result = [...await applyReplacements(dataset, {}, options)]
+    const replacer = createMetadataReplacer(options)
+    const result = [...await replacer(dataset, {})]
 
     strictEqual(result.length, 5)
     strictEqual(result[0].equals(data[0]), true)
@@ -119,7 +124,8 @@ describe('applyOptions', () => {
       dateModified: rdf.literal('1999-12-31', xsd.dateTime)
     }
     const dataset = rdf.dataset().addAll(data)
-    const result = [...await applyReplacements(dataset, {}, options)]
+    const replacer = createMetadataReplacer(options)
+    const result = [...await replacer(dataset, {})]
 
     strictEqual(result.length, 5)
     strictEqual(result[0].equals(data[0]), true)
@@ -139,7 +145,8 @@ describe('applyOptions', () => {
       dateModified: rdf.literal('1999-12-31', xsd.dateTime)
     }
     const dataset = rdf.dataset().addAll(data)
-    const result = [...await applyReplacements(dataset, {}, options)]
+    const replacer = createMetadataReplacer(options)
+    const result = [...await replacer(dataset, {})]
 
     strictEqual(result.length, 4)
     strictEqual(result[0].equals(data[0]), true)
@@ -157,7 +164,8 @@ describe('applyOptions', () => {
       dateModified: rdf.literal('1999-12-31', xsd.dateTime).toString()
     }
     const dataset = rdf.dataset().addAll(data)
-    const result = [...await applyReplacements(dataset, {}, options)]
+    const replacer = createMetadataReplacer(options)
+    const result = [...await replacer(dataset, {})]
 
     strictEqual(result.length, 2)
     strictEqual(result[0].equals(data[0]), true)
@@ -177,7 +185,8 @@ describe('applyOptions', () => {
       dateModified: rdf.literal('1999-12-31', xsd.dateTime)
     }
     const dataset = rdf.dataset().addAll(data)
-    const result = [...await applyReplacements(dataset, {}, options)]
+    const replacer = createMetadataReplacer(options)
+    const result = [...await replacer(dataset, {})]
 
     strictEqual(result.length, 5)
     strictEqual(result[0].graph.equals(ex.graph2), true)
@@ -196,7 +205,8 @@ describe('applyOptions', () => {
       graph: ex.graph2.value
     }
     const dataset = rdf.dataset().addAll(data)
-    const result = [...await applyReplacements(dataset, {}, options)]
+    const replacer = createMetadataReplacer(options)
+    const result = [...await replacer(dataset, {})]
 
     strictEqual(result.length, 1)
     strictEqual(result[0].graph.equals(ex.graph2), true)
