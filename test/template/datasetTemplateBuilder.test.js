@@ -2,29 +2,9 @@ import { strictEqual } from 'assert'
 import namespace from '@rdfjs/namespace'
 import cf from 'clownface'
 import { describe, it } from 'mocha'
-import { Parser } from 'n3'
 import rdf from 'rdf-ext'
-import { Readable } from 'readable-stream'
 import { createGetDataset } from '../../lib/template/datasetTemplateBuilder.js'
-
-const syncParser = new Parser()
-
-function toQuads (str) {
-  return syncParser.parse(str)
-}
-
-function toStream (str) {
-  return Readable.from(toQuads(str))
-}
-
-function quadsShouldBeEqual (actualQuads, expectedQuads, message) {
-  const actualDataset = rdf.dataset().addAll(actualQuads)
-  const expectedDataset = rdf.dataset().addAll(expectedQuads)
-  if (actualDataset.equals(expectedDataset)) {
-    return
-  }
-  strictEqual(actualDataset.toString(), expectedDataset.toString(), message)
-}
+import { datasetShouldBeEqual, toStream, toQuads, toDataset } from '../support/datasetShouldBeEqual.js'
 
 const ex = namespace('http://example.org/')
 
@@ -50,9 +30,15 @@ describe('createGetDataset', () => {
     const quad = undefined
     const actual = [...(await getDataset)(quad)]
 
-    const expected = toQuads(initialData)
+    const expected = toQuads(`
+@base <http://example.org/> .
 
-    quadsShouldBeEqual(actual, expected, 'should be the same quads')
+<subject> <has> "description" ;
+           <has> [ a <blankNode> ] .
+
+<subject2> <has> "another description" .`)
+
+    datasetShouldBeEqual(actual, expected, 'should be the same quads')
   })
 
   it('Reads from stream, with pointer', async () => {
@@ -79,7 +65,7 @@ describe('createGetDataset', () => {
            <has> [ a <blankNode> ] .
 `)
 
-    quadsShouldBeEqual(actual, expected, 'should be the same quads')
+    datasetShouldBeEqual(actual, expected, 'should be the same quads')
   })
 
   it('Reads from clownface, without pointer', async () => {
@@ -99,9 +85,15 @@ describe('createGetDataset', () => {
     const quad = undefined
     const actual = [...(await getDataset)(quad)]
 
-    const expected = toQuads(initialData)
+    const expected = toQuads(`
+@base <http://example.org/> .
 
-    quadsShouldBeEqual(actual, expected, 'should be the same quads')
+<subject> <has> "description" ;
+           <has> [ a <blankNode> ] .
+
+<subject2> <has> "another description" .`)
+
+    datasetShouldBeEqual(actual, expected, 'should be the same quads')
   })
 
   it('Reads from clownface, with pointer', async () => {
@@ -128,7 +120,18 @@ describe('createGetDataset', () => {
            <has> [ a <blankNode> ] .
 `)
 
-    quadsShouldBeEqual(actual, expected, 'should be the same quads')
+    datasetShouldBeEqual(actual, expected, 'should be the same quads')
+  })
+
+  it('Reads from a clownface, with empty data and no pointer', async () => {
+    // Subject under test
+    const input = cf({ dataset: rdf.dataset() })
+    const getDataset = createGetDataset({ input })
+
+    // Execute
+    const quad = undefined
+    const actual = [...(await getDataset)(quad)]
+    datasetShouldBeEqual(actual, [], 'should be the same quads')
   })
 
   it('Template values are replaced, with pointer', async () => {
@@ -155,7 +158,35 @@ describe('createGetDataset', () => {
         <has> [ a <blankNode> ] .
 `)
 
-    quadsShouldBeEqual(actual, expected, 'should be the same quads')
+    datasetShouldBeEqual(actual, expected, 'should be the same quads')
+  })
+
+  it('Template values are not replaced, when clownface without a pointer', async () => {
+    const initialData = `
+@base <http://example.org/> .
+
+<subject> <has> "description" ;
+           <has> [ a <blankNode> ] .
+
+<subject2> <has> "another description" .`
+
+    // Subject under test
+    const input = cf({ dataset: toDataset(initialData) })
+    const getDataset = createGetDataset({ input })
+
+    // Execute
+    const quad = rdf.quad(ex.alice)
+    const actual = [...(await getDataset)(quad)]
+
+    const expected = toQuads(`
+@base <http://example.org/> .
+
+<subject> <has> "description" ;
+           <has> [ a <blankNode> ] .
+
+<subject2> <has> "another description" .`)
+
+    datasetShouldBeEqual(actual, expected, 'should be the same quads')
   })
 
   it('Applies replacer', async () => {
@@ -188,6 +219,6 @@ describe('createGetDataset', () => {
         <couldHave> [ a <blankNode> ] .
 `)
 
-    quadsShouldBeEqual(actual, expected, 'should be the same quads')
+    datasetShouldBeEqual(actual, expected, 'should be the same quads')
   })
 })
