@@ -45,7 +45,8 @@
     "isstream": "^0.1.2",
     "mocha": "^9.0.1",
     "nock": "^13.2.4",
-    "stricter-standard": "^0.2.0"
+    "stricter-standard": "^0.2.0",
+    "n3": "^1.16.2"
   },
   "engines": {
     "node": ">= 14.0.0"
