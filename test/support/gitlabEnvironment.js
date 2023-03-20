@@ -9,6 +9,7 @@ const mockEnvironment = {
   GITLAB_USER_LOGIN: 'user',
 
   CI_COMMIT_AUTHOR: 'User <user@example.org>',
+  CI_COMMIT_TITLE: 'I added the commit title',
   CI_COMMIT_TIMESTAMP: '2023-03-14T12:24:50+01:00',
   CI_COMMIT_SHA: '30dd92dc282586159c8d4401d26262351f7228e0',
   CI_PIPELINE_URL: 'https://example.org/user/pipeline/-/pipelines/36212',

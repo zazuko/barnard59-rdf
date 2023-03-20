@@ -35,6 +35,7 @@ const snapshot = `<https://example.org/user/pipeline> <http://www.w3.org/1999/02
 <https://example.org/user/pipeline/-/pipelines> <http://example.org/contains> <https://example.org/user/pipeline/-/pipelines/36212> .
 <https://example.org/user/pipeline/-/commit/30dd92dc282586159c8d4401d26262351f7228e0> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.org/Commit> .
 <https://example.org/user/pipeline/-/commit/30dd92dc282586159c8d4401d26262351f7228e0> <http://example.org/triggered> <https://example.org/user/pipeline/-/pipelines/36212> .
+<https://example.org/user/pipeline/-/commit/30dd92dc282586159c8d4401d26262351f7228e0> <http://schema.org/name> "I added the commit title" .
 <https://example.org/user/pipeline/-/commit/30dd92dc282586159c8d4401d26262351f7228e0> <http://example.org/author> "User <user@example.org>" .
 <https://example.org/user/pipeline/-/commit/30dd92dc282586159c8d4401d26262351f7228e0> <http://www.w3.org/ns/prov#atTime> "2023-03-14T12:24:50+01:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
 <https://example.org/user/pipeline/-/pipelines/36212> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.org/PipelineRun> .
