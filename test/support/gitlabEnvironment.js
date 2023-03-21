@@ -24,13 +24,13 @@ const mockEnvironment = {
   CI_JOB_IMAGE: 'pipeline/node-java-jena:latest'
 }
 
-function setMockEnvironment (vars) {
+function setMockEnvironment () {
   for (const [key, value] of Object.entries(mockEnvironment)) {
     process.env[key] = `${value}`
   }
 }
 
-function clearMockEnvironment (vars) {
+function clearMockEnvironment () {
   for (const [key] of Object.entries(mockEnvironment)) {
     delete process.env[key]
   }

@@ -3,18 +3,16 @@ import namespace from '@rdfjs/namespace'
 import assertThrows from 'assert-throws-async'
 import getStream from 'get-stream'
 import { isDuplex } from 'isstream'
-import { describe, it } from 'mocha'
+import { describe, it, before, after } from 'mocha'
 import rdf from 'rdf-ext'
 import { Readable } from 'readable-stream'
 import appendGitlabProv from '../lib/appendGitlabProv.js'
-import { dcat } from '../lib/namespaces.js'
+import * as ns from '../lib/namespaces.js'
 import {
   clearMockEnvironment, setMockEnvironment
 } from './support/gitlabEnvironment.js'
 
 const ex = namespace('http://example.org/')
-const typePredicate = rdf.namedNode(
-  'http://www.w3.org/1999/02/22-rdf-syntax-ns#type')
 
 describe('metadata.appendGitlabProv', () => {
   it('should be a factory', () => {
@@ -31,16 +29,7 @@ describe('metadata.appendGitlabProv', () => {
     'should return a duplex stream with a subjectsWithClass (namedNode) metadata parameter',
     async () => {
       const step = await appendGitlabProv({
-        subjectsWithClass: dcat.Dataset
-      })
-      strictEqual(isDuplex(step), true)
-    })
-
-  it(
-    'should return a duplex stream with a subjectsWithClass (string) metadata parameter',
-    async () => {
-      const step = await appendGitlabProv({
-        subjectsWithClass: dcat.Dataset
+        subjectsWithClass: ns.dcat.Dataset
       })
       strictEqual(isDuplex(step), true)
     })
@@ -48,10 +37,10 @@ describe('metadata.appendGitlabProv', () => {
   it('should append no prov metadata with no environment variables',
     async () => {
       const initial = [
-        rdf.quad(ex.subject0, typePredicate, dcat.Dataset, ex.graph0)]
+        rdf.quad(ex.subject0, ns.rdf.type, ns.dcat.Dataset, ex.graph0)]
 
       const step = await appendGitlabProv({
-        subjectsWithClass: dcat.Dataset
+        subjectsWithClass: ns.dcat.Dataset
       })
 
       const result = await getStream.array(Readable.from(initial).pipe(step))
@@ -59,31 +48,63 @@ describe('metadata.appendGitlabProv', () => {
       strictEqual(result.length, 1)
       strictEqual(result[0].equals(initial[0]), true)
     })
+})
 
-  it('should append prov metadata with environment variables', async () => {
-    setMockEnvironment()
+describe('metadata.appendGitlabProv, case with environment variables', () => {
+  before(setMockEnvironment)
 
-    const initial = [
-      rdf.quad(ex.subject0, typePredicate, dcat.Dataset, ex.graph0)]
+  after(clearMockEnvironment)
 
-    const step = await appendGitlabProv({
-      subjectsWithClass: dcat.Dataset
+  it(
+    'should append prov metadata with a a subjectsWithClass (namedNode) metadata parameter',
+    async () => {
+      const initial = [
+        rdf.quad(ex.subject0, ns.rdf.type, ns.dcat.Dataset, ex.graph0)]
+
+      const step = await appendGitlabProv({
+        subjectsWithClass: ns.dcat.Dataset
+      })
+      const result = await getStream.array(Readable.from(initial).pipe(step))
+
+      strictEqual(result.length > 1, true)
     })
 
-    const result = await getStream.array(Readable.from(initial).pipe(step))
+  it(
+    'should append prov metadata with a subjectsWithClass (string) metadata parameter',
+    async () => {
+      const initial = [
+        rdf.quad(ex.subject0, ns.rdf.type, ns.dcat.Dataset, ex.graph0)]
 
-    strictEqual(result.length > 1, true)
-    clearMockEnvironment()
-  })
+      const step = await appendGitlabProv({
+        subjectsWithClass: `${ns.dcat.Dataset.value}`
+      })
+
+      const result = await getStream.array(Readable.from(initial).pipe(step))
+
+      strictEqual(result.length > 1, true)
+    })
+
+  it(
+    'should append no prov metadata when subjectsWithClass does not match',
+    async () => {
+      const initial = [
+        rdf.quad(ex.subject0, ns.rdf.type, ns.dcat.Unknown, ex.graph0)]
+
+      const step = await appendGitlabProv({
+        subjectsWithClass: `${ns.dcat.Dataset.value}`
+      })
+
+      const result = await getStream.array(Readable.from(initial).pipe(step))
+
+      strictEqual(result.length === 1, true)
+    })
 
   it('should append prov metadata with the specified graph', async () => {
-    setMockEnvironment()
-
     const initial = [
-      rdf.quad(ex.subject0, typePredicate, dcat.Dataset, ex.graph0)]
+      rdf.quad(ex.subject0, ns.rdf.type, ns.dcat.Dataset, ex.graph0)]
 
     const step = await appendGitlabProv({
-      subjectsWithClass: dcat.Dataset, graph: ex.graph1
+      subjectsWithClass: ns.dcat.Dataset, graph: ex.graph1
     })
 
     const result = await getStream.array(Readable.from(initial).pipe(step))
@@ -97,7 +118,5 @@ describe('metadata.appendGitlabProv', () => {
         strictEqual(quad.graph.equals(ex.graph1), true)
       }
     }
-
-    clearMockEnvironment()
   })
 })

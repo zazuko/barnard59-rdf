@@ -1,5 +1,5 @@
 import { strictEqual } from 'assert'
-import { describe, it } from 'mocha'
+import { describe, it, before, after } from 'mocha'
 import {
   checkGitlabVars, provFromGitlab
 } from '../../lib/metadata/produceProv.js'
@@ -17,14 +17,6 @@ describe('checkGitlabVars', () => {
     const { omitProv, message } = checkGitlabVars()
     strictEqual(omitProv, true)
     strictEqual(message.length > 0, true)
-  })
-
-  it('omitProv is false if a mandatory variable is set', async () => {
-    setMockEnvironment()
-    const { omitProv, message } = checkGitlabVars()
-    strictEqual(omitProv, false)
-    strictEqual(message, undefined)
-    clearMockEnvironment()
   })
 })
 
@@ -48,14 +40,24 @@ const snapshot = `<https://example.org/user/pipeline> <http://www.w3.org/1999/02
 `
 
 describe('provFromGitlab', () => {
+  before(setMockEnvironment)
+
+  after(clearMockEnvironment)
+
   it('should be a function', () => {
     strictEqual(typeof provFromGitlab, 'function')
   })
 
+  it('omitProv is false if a mandatory variable is set', async () => {
+    const { omitProv, message } = checkGitlabVars()
+
+    strictEqual(omitProv, false)
+    strictEqual(message, undefined)
+  })
+
   it('provFromGitlab produces a provenance template', async () => {
-    setMockEnvironment()
     const pointer = provFromGitlab()
+
     strictEqual(pointer.dataset.toString(), snapshot)
-    clearMockEnvironment()
   })
 })
