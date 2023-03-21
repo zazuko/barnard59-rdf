@@ -1,28 +1,28 @@
 import { strictEqual } from 'assert'
 import { describe, it, before, after } from 'mocha'
 import {
-  checkGitlabVars, provFromGitlab
+  checkEnvironment, provFromGitlab
 } from '../../lib/metadata/produceProv.js'
 import {
-  clearMockEnvironment, setMockEnvironment
+  clearGitlabMockEnvironment, setGitlabMockEnvironment
 } from '../support/gitlabEnvironment.js'
 
 describe('checkGitlabVars', () => {
   it('should be a function', () => {
-    strictEqual(typeof checkGitlabVars, 'function')
+    strictEqual(typeof checkEnvironment, 'function')
   })
 
-  it('omitProv is true with no message if GITLAB_CI is not present', async () => {
-    const { omitProv, message } = checkGitlabVars()
-    strictEqual(omitProv, true)
-    strictEqual(!message, true)
+  it('environment is undefined with undefined message if no environment is detected', async () => {
+    const { environment, message } = checkEnvironment()
+    strictEqual(environment, undefined)
+    strictEqual(message, undefined)
   })
 
-  it('omitProv is true with a message if mandatory vars are not set', async () => {
-    clearMockEnvironment()
+  it('environment is true if Gitlab environment is detected but mandatory vars are not set', async () => {
+    clearGitlabMockEnvironment()
     process.env.GITLAB_CI = 'true'
-    const { omitProv, message } = checkGitlabVars()
-    strictEqual(omitProv, true)
+    const { environment, message } = checkEnvironment()
+    strictEqual(environment, 'Gitlab')
     strictEqual(message.length > 1, true)
     delete process.env.GITLAB_CI
   })
@@ -48,24 +48,22 @@ const snapshot = `<https://example.org/user/pipeline> <http://www.w3.org/1999/02
 `
 
 describe('provFromGitlab', () => {
-  before(setMockEnvironment)
+  before(setGitlabMockEnvironment)
 
-  after(clearMockEnvironment)
+  after(clearGitlabMockEnvironment)
 
   it('should be a function', () => {
     strictEqual(typeof provFromGitlab, 'function')
   })
 
-  it('omitProv is false if a mandatory variable is set', async () => {
-    const { omitProv, message } = checkGitlabVars()
-
-    strictEqual(omitProv, false)
-    strictEqual(message, undefined)
+  it('environment is Gitlab ifGitlab variables are set', async () => {
+    const { environment, message } = checkEnvironment()
+    strictEqual(environment, 'Gitlab')
+    strictEqual(message, 'Gitlab detected, producing pipeline prov-metadata')
   })
 
   it('provFromGitlab produces a provenance template', async () => {
     const pointer = provFromGitlab()
-
     strictEqual(pointer.dataset.toString(), snapshot)
   })
 })

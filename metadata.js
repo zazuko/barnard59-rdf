@@ -1,5 +1,5 @@
 import append from './lib/append.js'
-import appendGitlabProv from './lib/appendGitlabProv.js'
+import appendPipelineProv from './lib/appendPipelineProv.js'
 import voidStats from './lib/voidStats.js'
 
-export { append, voidStats, appendGitlabProv }
+export { append, voidStats, appendPipelineProv }

@@ -6,29 +6,29 @@ import { isDuplex } from 'isstream'
 import { describe, it, before, after } from 'mocha'
 import rdf from 'rdf-ext'
 import { Readable } from 'readable-stream'
-import appendGitlabProv from '../lib/appendGitlabProv.js'
+import appendPipelineProv from '../lib/appendPipelineProv.js'
 import * as ns from '../lib/namespaces.js'
 import {
-  clearMockEnvironment, setMockEnvironment
+  clearGitlabMockEnvironment, setGitlabMockEnvironment
 } from './support/gitlabEnvironment.js'
 
 const ex = namespace('http://example.org/')
 
-describe('metadata.appendGitlabProv', () => {
+describe('metadata.appendPipelineProv', () => {
   it('should be a factory', () => {
-    strictEqual(typeof appendGitlabProv, 'function')
+    strictEqual(typeof appendPipelineProv, 'function')
   })
 
   it('should throw an error if no argument is given', async () => {
     await assertThrows(async () => {
-      await appendGitlabProv()
+      await appendPipelineProv()
     }, Error, /Needs subjectsWithClass as parameter/)
   })
 
   it(
     'should return a duplex stream with a subjectsWithClass (namedNode) metadata parameter',
     async () => {
-      const step = await appendGitlabProv({
+      const step = await appendPipelineProv({
         subjectsWithClass: ns.dcat.Dataset
       })
       strictEqual(isDuplex(step), true)
@@ -39,7 +39,7 @@ describe('metadata.appendGitlabProv', () => {
       const initial = [
         rdf.quad(ex.subject0, ns.rdf.type, ns.dcat.Dataset, ex.graph0)]
 
-      const step = await appendGitlabProv({
+      const step = await appendPipelineProv({
         subjectsWithClass: ns.dcat.Dataset
       })
 
@@ -50,10 +50,10 @@ describe('metadata.appendGitlabProv', () => {
     })
 })
 
-describe('metadata.appendGitlabProv, case with environment variables', () => {
-  before(setMockEnvironment)
+describe('metadata.appendPipelineProv, case with Gitlab environment variables', () => {
+  before(setGitlabMockEnvironment)
 
-  after(clearMockEnvironment)
+  after(clearGitlabMockEnvironment)
 
   it(
     'should append prov metadata with a a subjectsWithClass (namedNode) metadata parameter',
@@ -61,7 +61,7 @@ describe('metadata.appendGitlabProv, case with environment variables', () => {
       const initial = [
         rdf.quad(ex.subject0, ns.rdf.type, ns.dcat.Dataset, ex.graph0)]
 
-      const step = await appendGitlabProv({
+      const step = await appendPipelineProv({
         subjectsWithClass: ns.dcat.Dataset
       })
       const result = await getStream.array(Readable.from(initial).pipe(step))
@@ -75,7 +75,7 @@ describe('metadata.appendGitlabProv, case with environment variables', () => {
       const initial = [
         rdf.quad(ex.subject0, ns.rdf.type, ns.dcat.Dataset, ex.graph0)]
 
-      const step = await appendGitlabProv({
+      const step = await appendPipelineProv({
         subjectsWithClass: `${ns.dcat.Dataset.value}`
       })
 
@@ -90,7 +90,7 @@ describe('metadata.appendGitlabProv, case with environment variables', () => {
       const initial = [
         rdf.quad(ex.subject0, ns.rdf.type, ns.dcat.Unknown, ex.graph0)]
 
-      const step = await appendGitlabProv({
+      const step = await appendPipelineProv({
         subjectsWithClass: `${ns.dcat.Dataset.value}`
       })
 
@@ -103,7 +103,7 @@ describe('metadata.appendGitlabProv, case with environment variables', () => {
     const initial = [
       rdf.quad(ex.subject0, ns.rdf.type, ns.dcat.Dataset, ex.graph0)]
 
-    const step = await appendGitlabProv({
+    const step = await appendPipelineProv({
       subjectsWithClass: ns.dcat.Dataset, graph: ex.graph1
     })
 
