@@ -12,11 +12,19 @@ describe('checkGitlabVars', () => {
     strictEqual(typeof checkGitlabVars, 'function')
   })
 
-  it('omitProv is true if a mandatory variable is not set', async () => {
-    clearMockEnvironment()
+  it('omitProv is true with no message if GITLAB_CI is not present', async () => {
     const { omitProv, message } = checkGitlabVars()
     strictEqual(omitProv, true)
-    strictEqual(message.length > 0, true)
+    strictEqual(!message, true)
+  })
+
+  it('omitProv is true with a message if mandatory vars are not set', async () => {
+    clearMockEnvironment()
+    process.env.GITLAB_CI = 'true'
+    const { omitProv, message } = checkGitlabVars()
+    strictEqual(omitProv, true)
+    strictEqual(message.length > 1, true)
+    delete process.env.GITLAB_CI
   })
 })
 

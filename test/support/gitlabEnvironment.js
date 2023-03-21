@@ -1,4 +1,6 @@
 const mockEnvironment = {
+  GITLAB_CI: true,
+
   CI_PROJECT_ID: 123,
   CI_PROJECT_URL: 'https://example.org/user/pipeline',
   CI_PROJECT_DESCRIPTION: 'Test pipeline',
