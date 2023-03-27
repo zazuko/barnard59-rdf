@@ -51,21 +51,24 @@ describe('provFromGitlab', () => {
     const pointer = provFromGitlab({})
     const snapshot = `<https://example.org/user/pipeline/-/jobs/48940> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://barnard-prov.described.at/Job> .
 <https://example.org/user/pipeline/-/jobs/48940> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/prov#Activity> .
+<https://example.org/user/pipeline/-/jobs/48940> <https://barnard-prov.described.at/hasApp> <https://example.org/user/pipeline/-/jobs/48940> .
 <https://example.org/user/pipeline/-/jobs/48940> <https://barnard-prov.described.at/startedAtTime> "2023-03-14T12:25:09+01:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
 <https://example.org/user/pipeline/-/jobs/48940> <http://www.w3.org/ns/prov#wasStartedBy> <https://example.org/user/pipeline/-/commit/30dd92dc282586159c8d4401d26262351f7228e0> .
 <https://example.org/user/pipeline> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://barnard-prov.described.at/Codebase> .
-<https://example.org/user/pipeline> <http://www.w3.org/2000/01/rdf-schema#label> "pipeline" .
 <https://example.org/user/pipeline> <https://barnard-prov.described.at/hasApp> <https://example.org/user/pipeline> .
+<https://example.org/user/pipeline> <http://www.w3.org/2000/01/rdf-schema#label> "pipeline" .
 <https://example.org/user/pipeline> <https://barnard-prov.described.at/hasPipelineCollection> <https://example.org/user/pipeline/-/pipelines> .
 <https://example.org/user/pipeline> <http://schema.org/description> "Test pipeline" .
 <https://example.org/user/pipeline> <http://schema.org/name> "test-pipeline" .
+<https://example.org/user/pipeline> <https://barnard-prov.described.at/hasCommit> <https://example.org/user/pipeline/-/commit/30dd92dc282586159c8d4401d26262351f7228e0> .
 <https://example.org/user/pipeline/-/pipelines/36212> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://barnard-prov.described.at/PipelineRun> .
+<https://example.org/user/pipeline/-/pipelines/36212> <https://barnard-prov.described.at/hasApp> <https://example.org/user/pipeline/-/pipelines/36212> .
 <https://example.org/user/pipeline/-/pipelines/36212> <http://www.w3.org/2000/01/rdf-schema#label> "36212" .
 <https://example.org/user/pipeline/-/pipelines/36212> <https://barnard-prov.described.at/hasJob> <https://example.org/user/pipeline/-/jobs/48940> .
 <https://example.org/user/pipeline/-/pipelines/36212> <http://www.w3.org/ns/prov#startedAtTime> "2023-03-14T12:24:53+01:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
 <https://example.org/user/pipeline/-/pipelines> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://barnard-prov.described.at/PipelineRunCollection> .
-<https://example.org/user/pipeline/-/pipelines> <http://www.w3.org/2000/01/rdf-schema#label> "pipeline pipelines runs" .
 <https://example.org/user/pipeline/-/pipelines> <https://barnard-prov.described.at/hasApp> <https://example.org/user/pipeline/-/pipelines> .
+<https://example.org/user/pipeline/-/pipelines> <http://www.w3.org/2000/01/rdf-schema#label> "pipeline pipelines runs" .
 <https://example.org/user/pipeline/-/pipelines> <https://barnard-prov.described.at/hasPipelineRun> <https://example.org/user/pipeline/-/pipelines/36212> .
 <https://barnard-prov.described.at/environment/develop> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://barnard-prov.described.at/Environment> .
 <https://barnard-prov.described.at/environment/develop> <https://barnard-prov.described.at/hasJob> <https://example.org/user/pipeline/-/jobs/48940> .
@@ -85,21 +88,24 @@ describe('provFromGitlab', () => {
       const pointer = provFromGitlab({ baseNamespace: 'http:/ld' })
       const snapshot = `<http:/ld/-/jobs/48940> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://barnard-prov.described.at/Job> .
 <http:/ld/-/jobs/48940> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/prov#Activity> .
+<http:/ld/-/jobs/48940> <https://barnard-prov.described.at/hasApp> <https://example.org/user/pipeline/-/jobs/48940> .
 <http:/ld/-/jobs/48940> <https://barnard-prov.described.at/startedAtTime> "2023-03-14T12:25:09+01:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
 <http:/ld/-/jobs/48940> <http://www.w3.org/ns/prov#wasStartedBy> <http:/ld/-/commit/30dd92dc282586159c8d4401d26262351f7228e0> .
 <http:/ld> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://barnard-prov.described.at/Codebase> .
-<http:/ld> <http://www.w3.org/2000/01/rdf-schema#label> "pipeline" .
 <http:/ld> <https://barnard-prov.described.at/hasApp> <https://example.org/user/pipeline> .
+<http:/ld> <http://www.w3.org/2000/01/rdf-schema#label> "pipeline" .
 <http:/ld> <https://barnard-prov.described.at/hasPipelineCollection> <http:/ld/-/pipelines> .
 <http:/ld> <http://schema.org/description> "Test pipeline" .
 <http:/ld> <http://schema.org/name> "test-pipeline" .
+<http:/ld> <https://barnard-prov.described.at/hasCommit> <http:/ld/-/commit/30dd92dc282586159c8d4401d26262351f7228e0> .
 <http:/ld/-/pipelines/36212> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://barnard-prov.described.at/PipelineRun> .
+<http:/ld/-/pipelines/36212> <https://barnard-prov.described.at/hasApp> <https://example.org/user/pipeline/-/pipelines/36212> .
 <http:/ld/-/pipelines/36212> <http://www.w3.org/2000/01/rdf-schema#label> "36212" .
 <http:/ld/-/pipelines/36212> <https://barnard-prov.described.at/hasJob> <http:/ld/-/jobs/48940> .
 <http:/ld/-/pipelines/36212> <http://www.w3.org/ns/prov#startedAtTime> "2023-03-14T12:24:53+01:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
 <http:/ld/-/pipelines> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://barnard-prov.described.at/PipelineRunCollection> .
-<http:/ld/-/pipelines> <http://www.w3.org/2000/01/rdf-schema#label> "pipeline pipelines runs" .
 <http:/ld/-/pipelines> <https://barnard-prov.described.at/hasApp> <https://example.org/user/pipeline/-/pipelines> .
+<http:/ld/-/pipelines> <http://www.w3.org/2000/01/rdf-schema#label> "pipeline pipelines runs" .
 <http:/ld/-/pipelines> <https://barnard-prov.described.at/hasPipelineRun> <http:/ld/-/pipelines/36212> .
 <https://barnard-prov.described.at/environment/develop> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://barnard-prov.described.at/Environment> .
 <https://barnard-prov.described.at/environment/develop> <https://barnard-prov.described.at/hasJob> <http:/ld/-/jobs/48940> .
